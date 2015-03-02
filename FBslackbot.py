@@ -5,15 +5,14 @@ import json		#Facebook formats all its graph API response data in JAY-SON!
 #Facebook stuff#
 ################
 
-#Facebook User ID (I'm pretty sure this is app specific, aka not your global ID.)
+#Facebook User ID or group ID/Page ID
 uid = '226864370853850' 		
 
-#field variable change to query for different shit (ID-TO-QUERY/data-field-to-read)
+#field variable change to query for different shit
 fvar = "feed.limit(10)" 	
 
 #Facebook access token with read permission to Hacksoc group
 access_token = ''
-
 
 #Graph API format get request
 r = requests.get("https://graph.facebook.com/" + uid + "?fields=" + fvar + "&access_token=" + access_token)
@@ -21,12 +20,12 @@ r = requests.get("https://graph.facebook.com/" + uid + "?fields=" + fvar + "&acc
 #JSON format response 
 print r.json()['feed']['data'][1]['created_time']
 
-#For loop iterates through number of posts found in feed (restricted by feed.limit(x)) prints created timme∏
+#For loop iterates through number of posts found in feed (restricted by feed.limit(x)) prints created time
 #Planning to use created time to track what posts have already been forwared to the webhook 
 for x in range(len(r.json()['feed']['data'])):
 	print r.json()['feed']['data'][x]['created_time']
 	
-
+##This section is mainly prints for debuging and feeling around the nested JSON
 postid = r.json()['feed']['data'][0]['id']
 fvar2 = 'created_time'
 cr = requests.get("https://graph.facebook.com/" + postid + "?fields=" + fvar2 + "&access_token=" + access_token)
@@ -46,8 +45,9 @@ payload='{"text": "happy now?", "channel": "#general", "username": "police-bot",
 
 #POST to webhook, data(JSON)
 #p = requests.post(whaddr, data=payload) #POST request 
-#print p.text
 
+#debug print line to check request formed correctly
+#print p.text
 
 
 # Sample of slack POST request suing curl
