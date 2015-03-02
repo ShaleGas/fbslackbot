@@ -39,7 +39,7 @@ print r.url
 #############
 
 #Webhook address
-whaddr = "https://hooks.slack.com/services/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" 
+whaddr = "" 
 
 #Payload (JSON)
 payload='{"text": "happy now?", "channel": "#general", "username": "police-bot", "icon_emoji": ":cop:"}'
