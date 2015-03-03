@@ -35,7 +35,7 @@ def slackpost(name, message):
 	whaddr = "https://hooks.slack.com/services/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" 
 
 	#All the standard message vars
-	text = message 
+	text = "placeholder" 
 	channel = '#general'
 	username = 'facebook'
 	emoji = ':cop:'
@@ -97,10 +97,10 @@ for x in range(NumPosts):
 	#This try/catch will probably need significant expansion but has worked
 	#with my use case so far. 
 	try:
-		print r.json()['feed']['data'][x]['message']
+		print r.json()['feed']['data'][x]['message'].encode('utf-8')
 		message = r.json()['feed']['data'][x]['message']
 	except KeyError:
-		print r.json()['feed']['data'][x]['story']
+		print r.json()['feed']['data'][x]['story'].encode('utf-8')
 		message = r.json()['feed']['data'][x]['story']
 	
 	#Debug prints; break after each 'post', url so that I could check some stuff
