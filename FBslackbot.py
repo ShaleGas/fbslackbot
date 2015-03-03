@@ -29,28 +29,28 @@ NumPosts = len(r.json()['feed']['data'])
 
 
 #The Slack function hanlding the webhook, formating, etc. 
-def slackpost(name, message):
+def slackpost(name, message, picture,link,description):
 
 	#Webhook address
 	whaddr = "https://hooks.slack.com/services/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" 
 
 	#All the standard message vars
-	text = "placeholder" 
+	text = "" 
 	channel = '#general'
 	username = 'facebook'
-	emoji = ':cop:'
+	emoji = ''
 
 	#All the attachment vars
 	fallback = ""
-	color = ""
+	color = "#8b9dc3"
 	pretext = "" 
 	author_name = name
 	author_link = ""
 	author_icon = ""
 	title = ""
-	title_link = ""
+	title_link = link
 	attachtext = message
-	image_url = ""
+	image_url = picture
 
 	#Full payload including attachement //This may work with a stannard dictionary,
 	#I thought the order may have been an issue when debugging the JSON -seems to work anyway 
@@ -73,7 +73,7 @@ def slackpost(name, message):
 	jsonpayload = json.dumps(payload)
 	
 	#Needed to pass this to another var, 
-	#Probably some type issue here, passing it to antoher variable fixes it. 
+	#Probably some type issue here, passing it to another variable fixes it. 
 	anotherjsonpayload = jsonpayload 
 
 	#POST to webhook, data(JSON)
@@ -81,6 +81,15 @@ def slackpost(name, message):
 
 	#debug print line to check request formed correctly
 	print p.text
+
+
+#Create empty vars to avoid exception when passing to function
+
+name = ""
+message = ""
+picture = ""
+link = ""
+description = ""
 
 #For loop iterates through number of posts found in feed (restricted by feed.limit(x))
 #Planning to use created time to track what posts have already been forwared to the webhook 
@@ -95,7 +104,9 @@ for x in range(NumPosts):
 	
 	#Not all feed posts are the same or conform to the same JSON structure
 	#This try/catch will probably need significant expansion but has worked
-	#with my use case so far. 
+	#with my use case so far.
+	#Could be doing this alot, should refactor.
+	
 	try:
 		print r.json()['feed']['data'][x]['message'].encode('utf-8')
 		message = r.json()['feed']['data'][x]['message']
@@ -103,15 +114,33 @@ for x in range(NumPosts):
 		print r.json()['feed']['data'][x]['story'].encode('utf-8')
 		message = r.json()['feed']['data'][x]['story']
 	
+	try:
+		print r.json()['feed']['data'][x]['picture'].encode('utf-8')
+		picture = r.json()['feed']['data'][x]['picture']
+	except KeyError:
+		print "KeyError" + "picture"
+
+	try:
+		print r.json()['feed']['data'][x]['link'].encode('utf-8')
+		link = r.json()['feed']['data'][x]['link']
+	except KeyError:
+		print "KeyError" + "link"
+	
+	try:
+		print r.json()['feed']['data'][x]['description'].encode('utf-8')
+		description = r.json()['feed']['data'][x]['description']
+	except KeyError:
+		print "KeyError" + "description"
+
+	
 	#Debug prints; break after each 'post', url so that I could check some stuff
 	#in the browser
-	
 	print 'BREAK'
 	print r.url
 	
 	#The slackpost function handles the webhook to Slack, can be expanded for 
 	#alot more vars
-	slackpost(name, message)
+	slackpost(name, message, picture,link,description)
 
 #Print URL for debugging 
 print r.url
