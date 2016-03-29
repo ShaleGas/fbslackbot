@@ -1,4 +1,4 @@
-import requests #Beacuse Python http is just too broken
+import requests 	
 import json		#Facebook formats all its graph API response data in JAY-SON!
 from collections import OrderedDict
 
@@ -9,11 +9,11 @@ from collections import OrderedDict
 #Facebook User ID or group ID/Page ID
 uid = '' 		
 
-#field variable: change to query for different shit and or amount of shit
+#field variable: change to query for different stuff and or amount of stuff
 #the feed.limit(number) seems to refer to pagination rather than posts.
 fvar = "feed.limit(2)" 	
 
-#Facebook access token with read permission to Hacksoc group
+#Facebook access token with read permission to facebook group
 access_token = ''
 
 #Graph API format get request
@@ -22,17 +22,17 @@ r = requests.get("https://graph.facebook.com/" + uid + "?fields=" + fvar + "&acc
 #Var for number of posts in feed 
 NumPosts = len(r.json()['feed']['data'])
 
-#Some kind of system to track what posts have been posted, what posts
+#Some system to track what posts have been posted, what posts
 #are new, all that stuff need implemented here...
+
 #Last Scraped Date
 #LastScrape = ''
-
 
 #The Slack function hanlding the webhook, formating, etc. 
 def slackpost(name, message, picture,link,description):
 
 	#Webhook address
-	whaddr = "https://hooks.slack.com/services/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" 
+	whaddr = "" 
 
 	#All the standard message vars
 	text = "" 
@@ -52,8 +52,8 @@ def slackpost(name, message, picture,link,description):
 	attachtext = message
 	image_url = picture
 
-	#Full payload including attachement //This may work with a stannard dictionary,
-	#I thought the order may have been an issue when debugging the JSON -seems to work anyway 
+	#Full payload including attachement -This may work with a standard dictionary,
+	#I thought the order may have been an issue when debugging the JSON, hence OrderedDict, but seems to work anyway 
 	payload = OrderedDict([( 'text',text),
 						   ('channel',channel),
 						   ('username',username), 
@@ -84,6 +84,7 @@ def slackpost(name, message, picture,link,description):
 
 
 #Create empty vars to avoid exception when passing to function
+#I'll admit this is not elegant
 
 name = ""
 message = ""
